@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Rock Paper Scissors Game</title>
+</head>
+<body>
+  <script>
+    // Function to get a random computer choice
+    function getComputerChoice() {
+        let randomValue = Math.random(); // Generates a random number between 0 and 1
+        if (randomValue < 0.34) {
+            return 'Paper';
+        } else if (randomValue >= 0.34 && randomValue < 0.67) {
+            return 'Rock';
+        } else {
+            return 'Scissors';
+        }
+    }
+
+    // Function to get the human's choice
+    function getHumanChoice() {
+        let choice = prompt("Enter your choice: Rock, Paper, or Scissors").toLowerCase();
+        
+        // Validate the player's input
+        while (choice !== 'rock' && choice !== 'paper' && choice !== 'scissors') {
+            choice = prompt("Invalid choice! Please enter Rock, Paper, or Scissors").toLowerCase();
+        }
+        
+        return choice.charAt(0).toUpperCase() + choice.slice(1); // Capitalize the first letter for consistency
+    }
+
+    // Function to play one round and determine the winner
+    function playRound(humanChoice, computerChoice, humanScore, computerScore) {  
+        // Determine the winner
+        if (humanChoice === computerChoice) {
+            console.log("It's a tie! Both chose " + humanChoice);
+        } else if (
+            (humanChoice === 'Rock' && computerChoice === 'Scissors') ||
+            (humanChoice === 'Scissors' && computerChoice === 'Paper') ||
+            (humanChoice === 'Paper' && computerChoice === 'Rock')
+        ) {
+            // Human wins
+            humanScore++;  
+            console.log(`You win! ${humanChoice} beats ${computerChoice}`);
+        } else {
+            // Computer wins
+            computerScore++;  
+            console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
+        }
+        
+        // Display current score
+        console.log(`Current Score - Human: ${humanScore}, Computer: ${computerScore}`);
+        return { humanScore, computerScore };
+    }
+
+    // Function to play 5 rounds
+    function playGame() {
+        // Initialize score variables inside the function to reset each game
+        let humanScore = 0;
+        let computerScore = 0;
+
+        // Play 5 rounds
+        for (let i = 0; i < 5; i++) {
+            console.log(`Round ${i + 1}:`);
+            let humanChoice = getHumanChoice();        // Get the player's choice
+            let computerChoice = getComputerChoice();  // Get the computer's choice
+            // Play the round and update the scores
+            let scores = playRound(humanChoice, computerChoice, humanScore, computerScore);
+            humanScore = scores.humanScore;
+            computerScore = scores.computerScore;
+        }
+
+        // Announce the final winner
+        console.log(`Final Score - Human: ${humanScore}, Computer: ${computerScore}`);
+        if (humanScore > computerScore) {
+            console.log("Congratulations! You are the overall winner!");
+        } else if (humanScore < computerScore) {
+            console.log("Computer wins the game! Better luck next time.");
+        } else {
+            console.log("It's a tie overall!");
+        }
+    }
+
+    // Call this to start the game and play 5 rounds
+    playGame();
+
+  </script>
+</body>
+</html>
