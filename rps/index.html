@@ -5,7 +5,22 @@
   <title>Rock Paper Scissors Game</title>
 </head>
 <body>
+
+  <!-- Buttons for player choices -->
+  <h2>Choose your move:</h2>
+  <button id="rockButton">Rock</button>
+  <button id="paperButton">Paper</button>
+  <button id="scissorsButton">Scissors</button>
+
+  <!-- Display area for game results -->
+  <div id="result"></div>
+  <div id="score"></div>
+
   <script>
+    // Initialize score variables
+    let humanScore = 0;
+    let computerScore = 0;
+
     // Function to get a random computer choice
     function getComputerChoice() {
         let randomValue = Math.random(); // Generates a random number between 0 and 1
@@ -18,73 +33,65 @@
         }
     }
 
-    // Function to get the human's choice
-    function getHumanChoice() {
-        let choice = prompt("Enter your choice: Rock, Paper, or Scissors").toLowerCase();
-        
-        // Validate the player's input
-        while (choice !== 'rock' && choice !== 'paper' && choice !== 'scissors') {
-            choice = prompt("Invalid choice! Please enter Rock, Paper, or Scissors").toLowerCase();
-        }
-        
-        return choice.charAt(0).toUpperCase() + choice.slice(1); // Capitalize the first letter for consistency
-    }
-
     // Function to play one round and determine the winner
-    function playRound(humanChoice, computerChoice, humanScore, computerScore) {  
+    function playRound(humanChoice, computerChoice) {  
+        let resultMessage = "";
         // Determine the winner
         if (humanChoice === computerChoice) {
-            console.log("It's a tie! Both chose " + humanChoice);
+            resultMessage = "It's a tie! Both chose " + humanChoice;
         } else if (
             (humanChoice === 'Rock' && computerChoice === 'Scissors') ||
             (humanChoice === 'Scissors' && computerChoice === 'Paper') ||
             (humanChoice === 'Paper' && computerChoice === 'Rock')
         ) {
-            // Human wins
             humanScore++;  
-            console.log(`You win! ${humanChoice} beats ${computerChoice}`);
+            resultMessage = `You win! ${humanChoice} beats ${computerChoice}`;
         } else {
-            // Computer wins
             computerScore++;  
-            console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
+            resultMessage = `You lose! ${computerChoice} beats ${humanChoice}`;
         }
         
-        // Display current score
-        console.log(`Current Score - Human: ${humanScore}, Computer: ${computerScore}`);
-        return { humanScore, computerScore };
+        // Update result and score on the webpage
+        document.getElementById("result").textContent = resultMessage;
+        document.getElementById("score").textContent = `Current Score - Human: ${humanScore}, Computer: ${computerScore}`;
+
+        // Check if 5 rounds are complete
+        if (humanScore + computerScore >= 5) {
+            announceWinner();
+        }
     }
 
-    // Function to play 5 rounds
-    function playGame() {
-        // Initialize score variables inside the function to reset each game
-        let humanScore = 0;
-        let computerScore = 0;
-
-        // Play 5 rounds
-        for (let i = 0; i < 5; i++) {
-            console.log(`Round ${i + 1}:`);
-            let humanChoice = getHumanChoice();        // Get the player's choice
-            let computerChoice = getComputerChoice();  // Get the computer's choice
-            // Play the round and update the scores
-            let scores = playRound(humanChoice, computerChoice, humanScore, computerScore);
-            humanScore = scores.humanScore;
-            computerScore = scores.computerScore;
-        }
-
-        // Announce the final winner
-        console.log(`Final Score - Human: ${humanScore}, Computer: ${computerScore}`);
+    // Function to announce the final winner after 5 rounds
+    function announceWinner() {
+        let finalMessage = `Final Score - Human: ${humanScore}, Computer: ${computerScore}. `;
         if (humanScore > computerScore) {
-            console.log("Congratulations! You are the overall winner!");
+            finalMessage += "Congratulations! You are the overall winner!";
         } else if (humanScore < computerScore) {
-            console.log("Computer wins the game! Better luck next time.");
+            finalMessage += "Computer wins the game! Better luck next time.";
         } else {
-            console.log("It's a tie overall!");
+            finalMessage += "It's a tie overall!";
         }
+        
+        document.getElementById("result").textContent = finalMessage;
+
+        // Reset scores for a new game
+        humanScore = 0;
+        computerScore = 0;
     }
 
-    // Call this to start the game and play 5 rounds
-    playGame();
+    // Event listeners for each button
+    document.getElementById("rockButton").addEventListener("click", function() {
+        playRound("Rock", getComputerChoice());
+    });
 
+    document.getElementById("paperButton").addEventListener("click", function() {
+        playRound("Paper", getComputerChoice());
+    });
+
+    document.getElementById("scissorsButton").addEventListener("click", function() {
+        playRound("Scissors", getComputerChoice());
+    });
   </script>
+
 </body>
 </html>
